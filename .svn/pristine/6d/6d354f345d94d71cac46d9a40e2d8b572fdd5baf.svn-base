@@ -1,0 +1,52 @@
+<template>
+  <div class="jy_navs">
+    <div
+      class="item"
+      v-for="(item, index) in data"
+      :key="index"
+      :style="{ 'width': (100/number) + '%' }"
+      @click.stop="toNext(item)"
+    >
+      <img :src="item.img" :style="{ 'width':item.width + 'rpx', 'height': item.height + 'rpx' }">
+      <div class="small">{{item.label}}</div>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  props: ["data", "number"],
+  methods: {
+    toNext(item) {
+      console.log("item", item);
+      if (item.url) {
+        if (mpvuePlatform === "wx") {
+          wx.navigateTo({
+            url: item.url
+          });
+        }
+      }
+    }
+  }
+};
+</script>
+
+<style lang="less">
+.jy_navs {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  .item {
+    color: #515151;
+    text-align: center;
+    margin-bottom: 40rpx;
+    img {
+      margin-bottom: 15rpx;
+    }
+    .small {
+      font-size: 24rpx;
+    }
+  }
+}
+</style>

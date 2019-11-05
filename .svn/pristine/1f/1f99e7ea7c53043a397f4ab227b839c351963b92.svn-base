@@ -1,0 +1,29 @@
+<template>
+  <div class="applet_title">
+    <div>{{title}}</div>
+    <div class="samll">{{subtitle}}</div>
+  </div>
+</template>
+
+<script>
+export default {
+  props: ["title", "subtitle"]
+};
+</script>
+
+<style lang="less">
+.applet_title {
+  text-align: center;
+  width: 100%;
+  color: #002787;
+  font-size: 36rpx;
+  margin-bottom: 48rpx;
+  margin-top: 74rpx;
+  font-weight: bold;
+
+  .samll {
+    font-size: 28rpx;
+    margin-top: 20rpx;
+  }
+}
+</style>

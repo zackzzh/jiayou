@@ -1,0 +1,378 @@
+<template>
+  <div>
+    <jy-header></jy-header>
+    <div class="app">
+      <jy-banner bannerUrl="/static/images/applet/banner.png"></jy-banner>
+      <jy-data></jy-data>
+      <jy-title title="为全行业提供专属解决方案" subtitle="无需安装，扫码即用的小程序商城"></jy-title>
+      <!-- <jy-navs :data="appData.navs" number="6"></jy-navs> -->
+      <div class="jy_navs">
+        <div
+          class="item"
+          v-for="(item, index) in appData.navs"
+          :key="index"
+          :style="{ 'width': (100/6) + '%' }"
+          @click.stop="toNext(item)"
+        >
+          <img
+            :src="item.img"
+            :style="{ 'width':item.width + 'rpx', 'height': item.height + 'rpx' }"
+          >
+          <div class="small">{{item.label}}</div>
+        </div>
+      </div>
+      <jy-title title="微信小程序方案适用行业" subtitle="全面覆盖20+主流行业，开发方案更快、更好"></jy-title>
+      <div class="applet_more">
+        <button @click="goBottom">获取行业方案</button>
+      </div>
+      <div class="applet_jz_img">
+        <div class="applet_img">
+          <image src="/static/images/app/jzbj.png"></image>
+        </div>
+        <div class="applet_jz">
+          <div class="jz_left">
+            <img src="/static/images/app/jz.png" alt>
+          </div>
+          <div class="jz_right">
+            <div class="title">APP开发价值</div>
+            <p>1.建设社会化销售平台，提高品牌宣传的力度</p>
+            <p>2.精准定位客户群体针对性宣传</p>
+            <p>3.增强用户互动提高用户忠诚度</p>
+            <p>4.建设强大的数据中心，实现用户行为记录分析</p>
+          </div>
+        </div>
+      </div>
+      <jy-title title="专注6年，万家客户共同选择" subtitle="FOCUS ON 6 YEARS, CUSTOMER COMMON CHOICE"></jy-title>
+      <jy-banner bannerUrl="/static/images/applet/rk.png"></jy-banner>
+      <jy-title title="为什么选择我们？" subtitle="WHY CHOOSE US?"></jy-title>
+      <div class="applet_vs_img">
+        <div class="applet_img">
+          <image src="/static/images/app/vs.png"></image>
+        </div>
+        <div class="applet_vs">
+          <div class="main_top">
+            <div class="top_left">其他团队</div>
+            <div class="top_right">甲由团队</div>
+          </div>
+          <div class="vs_content">
+            <div class="item" v-for="(item, index) in appData.vsList" :key="index">
+              <div class="small">{{item.left}}</div>
+              <button>{{item.button}}</button>
+              <div>{{item.right}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <jy-title title="化繁为简！标准定制流程" subtitle="SIMPLIFY STANDARD CUSTOMIZATION PROCESS "></jy-title>
+      <div class="applet_process">
+        <div class="process_one">
+          <div class="process_item" v-for="(item, index) in appData.processList" :key="index">
+            <div class="applet_img">
+              <img :src="item.xq" alt class="xq" v-if="item.xq">
+              <img :src="item.jt" alt class="jt" v-if="item.jt">
+            </div>
+            <span>{{item.label}}</span>
+          </div>
+        </div>
+      </div>
+      <jy-title title="经典案例" subtitle="CLASSIC CASE"></jy-title>
+      <div class="jy_cases_div">
+        <div v-if="appData.casesList && appData.casesList.length > 0">
+          <div
+            class="jy_case_card_div"
+            v-for="(item, index) in appData.casesList"
+            :key="index"
+            @click="toDetail(item)"
+          >
+            <div class="jy_cases_card">
+              <image class="jy_cases_img" mode="widthFix" :src="item.picUrl"></image>
+              <div class="jy_cases_title">{{item.title}}</div>
+              <div class="jy_cases_subtitle">{{item.subtitle}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <jy-form :index="1"></jy-form>
+    </div>
+    <jy-footer></jy-footer>
+  </div>
+</template>
+
+<script>
+import jyBanner from "@/components/jy_banner.vue";
+import jyData from "@/components/jy_data.vue";
+import jyTitle from "@/components/jy_title.vue";
+import jyAd from "@/components/jy_ad.vue";
+import jyForm from "@/components/jy_form.vue";
+import jyHeader from "@/components/jy_header.vue";
+import jyFooter from "@/components/jy_footer.vue";
+import utils from "@/utils/index";
+import appData from "./appData";
+export default {
+  data() {
+    return {
+      appData,
+      casesList: []
+    };
+  },
+  computed: {},
+
+  created() {
+    this.$api.cases({ typeId: 1 }).then(res => {
+      if (res.code === 200) {
+          // this.$set(this.appData,'casesList',res.page.list)
+        this.appData.casesList = res.page.list;
+      }
+    });
+  },
+  components: {
+    jyBanner,
+    jyData,
+    jyTitle,
+    jyAd,
+    jyForm,
+    jyHeader,
+    jyFooter
+  },
+  methods: {
+    goBottom() {
+      utils.toBottom();
+    },
+    toDetail(val) {
+      if (mpvuePlatform === "wx") {
+        wx.navigateTo({
+          url: "/pages/cases_detail/main?id=" + val.id
+        });
+      } else if (mpvuePlatform === "swan") {
+        swan.navigateTo({
+          url: "/pages/cases_detail/main?id=" + val.id
+        });
+      }
+    }
+  }
+};
+</script>
+
+<style lang="less">
+.app {
+ padding:105rpx 20rpx;
+  // 按钮
+  .jy_navs {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    .item {
+      color: #515151;
+      text-align: center;
+      margin-bottom: 40rpx;
+      img {
+        margin-bottom: 15rpx;
+      }
+      .small {
+        font-size: 24rpx;
+      }
+    }
+  }
+  .jy_cases_div {
+    margin: 10rpx 0;
+    white-space: nowrap;
+    overflow-x: auto;
+    .jy_case_card_div {
+      width: 42%;
+      display: inline-block;
+      margin: 18rpx 10rpx;
+      .jy_cases_card {
+        width: 100%;
+        border-radius: 0 0 10rpx 10rpx;
+        background: #303030;
+        box-shadow: 0 4rpx 20rpx 0 rgba(51, 51, 51, 0.43);
+        border-radius: 12rpx;
+        text-align: center;
+
+        .jy_cases_img {
+          width: 100%;
+          border-radius: 12rpx 12rpx 0 0;
+        }
+
+        .jy_cases_title {
+          overflow: hidden;
+          padding: 14rpx 0 8rpx 0;
+          color: #f6f6f6;
+          font-size: 24rpx;
+          font-weight: bold;
+        }
+
+        .jy_cases_subtitle {
+          padding: 0 0 10rpx 0;
+          color: #8a8a8a;
+          font-size: 20rpx;
+        }
+      }
+    }
+  }
+  .applet_more {
+    width: 100%;
+    margin-bottom: 76rpx;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    button {
+      width: 224rpx;
+      height: 64rpx;
+      line-height: 64rpx;
+      text-align: center;
+      background: #99c4e9;
+      border: none;
+      box-shadow: 0px 6px 13px 0px rgba(42, 75, 198, 0.6);
+      border-radius: 32rpx;
+      font-size: 22rpx;
+      a {
+        color: #333333;
+      }
+    }
+  }
+  // app价值
+  .applet_jz_img {
+    position: relative;
+    .applet_img {
+      position: relative;
+      z-index: 1;
+      image {
+        width: 100%;
+      }
+    }
+    .applet_jz {
+      top: 0;
+      position: absolute;
+      z-index: 2;
+      padding: 32rpx;
+      display: flex;
+      align-items: center;
+      .jz_left {
+        width: 266rpx;
+        flex-shrink: 0;
+        img {
+          width: 100%;
+          height: 352rpx;
+        }
+      }
+
+      .jz_right {
+        width: 100%;
+        color: #333333;
+        margin-left: 54rpx;
+        flex-shrink: 1;
+        .title {
+          font-size: 36rpx;
+          margin-bottom: 50rpx;
+          text-align: center;
+        }
+
+        p {
+          font-weight: bold;
+          font-size: 22rpx;
+          margin-bottom: 32rpx;
+        }
+      }
+    }
+  }
+
+  //vs
+  .applet_vs_img {
+    position: relative;
+    .applet_img {
+      position: relative;
+      z-index: 1;
+      image {
+        width: 100%;
+        height: 600rpx;
+      }
+    }
+    .applet_vs {
+      position: absolute;
+      top: 0;
+      padding-top: 32rpx;
+      z-index: 2;
+      width: 100%;
+      .main_top {
+        font-size: 36rpx;
+        color: #333333;
+        padding: 0rpx 103rpx;
+        padding-top: 50rpx;
+        padding-bottom: 60rpx;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .vs_content {
+        width: 100%;
+        .item {
+          display: flex;
+          align-items: center;
+          color: #fff;
+          padding-bottom: 32rpx;
+          font-size: 24rpx;
+          button {
+            margin: 0 8%;
+            width: 182rpx;
+            height: 48rpx;
+            line-height: 48rpx;
+            background: rgba(243, 152, 0, 1);
+            border-radius: 10rpx;
+            text-align: center;
+            color: rgba(55, 100, 194, 1);
+            font-size: 30rpx;
+            border: none;
+            flex-shrink: 0;
+          }
+
+          .small {
+            font-size: 24rpx;
+            width: 30%;
+            flex-shrink: 0;
+            text-align: right;
+          }
+          .left {
+            text-align: left;
+          }
+        }
+      }
+    }
+  }
+
+  //流程
+  .applet_process {
+    .process_one {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-wrap: wrap;
+      .process_item {
+        color: #515151;
+        font-size: 22rpx;
+        margin-bottom: 30rpx;
+        .applet_img {
+          display: flex;
+          align-items: center;
+          margin-bottom: 10rpx;
+          .xq {
+            width: 110rpx;
+            height: 110rpx;
+          }
+          .jt {
+            width: 46rpx;
+            height: 30rpx;
+            margin: 0 12rpx;
+          }
+        }
+        span {
+          text-indent: 10rpx;
+          display: inline-block;
+          font-size: 22rpx;
+        }
+      }
+    }
+  }
+}
+</style>

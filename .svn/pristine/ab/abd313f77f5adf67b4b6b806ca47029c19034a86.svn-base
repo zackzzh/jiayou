@@ -1,0 +1,178 @@
+<template>
+  <form @submit="formSubmitHandle">
+    <div class="common_fangan" id="bottom">
+      <div class="two">
+        <img src="/static/images/fa3.png" alt>
+        <input label="联系人姓名" placeholder="请输入联系人姓名" name="custName">
+      </div>
+      <div class="two">
+        <img src="/static/images/fa4.png" alt>
+        <input label="联系电话" placeholder="请输入联系电话" name="custPhone">
+      </div>
+      <div class="one">
+        <div class="one_left">
+          <img src="/static/images/fa1.png" alt>
+          <span>需求类型</span>
+        </div>
+        <picker @change="bindPickerChange1" :value="index" :range="array" name="index">
+          <div class="picker">{{array[formData.index]}}</div>
+        </picker>
+        <img src="/static/images/fa2.png" alt class="select_img">
+      </div>
+      <div class="button">
+        <button class="button1" form-type="submit">免费获取报价方案</button>
+      </div>
+      <van-toast id="van-toast"/>
+    </div>
+  </form>
+</template>
+
+<script>
+export default {
+  props: ["index"],
+  data() {
+    return {
+      formData: {
+        custName: "",
+        custPhone: "",
+        index: this.index
+      },
+      array: ["App开发", "网站建设", "系统开发", "小程序开发", "公众号开发"]
+    };
+  },
+  methods: {
+    bindPickerChange1(e) {
+      this.formData.index = e.mp.detail.value;
+    },
+    formSubmitHandle(e) {
+      var item = e.mp.detail.value;
+      if (
+        item.custName.length == 0 ||
+        item.custPhone.length == 0 ||
+        this.array[item.index].length == 0
+      ) {
+        if (mpvuePlatform == "wx") {
+          wx.showToast({
+            title: "请完善信息",
+            duration: 2000
+          });
+        } else {
+          swan.showToast({
+            title: "请完善信息",
+            duration: 2000
+          });
+        }
+        return;
+      }
+      var data = JSON.stringify({
+        custName: item.custName,
+        custPhone: item.custPhone,
+        custRemark: this.array[item.index]
+      });
+      console.log("data:", data);
+      return;
+      this.$api.addCustDemand(data).then(res => {
+        if (res.code === 200) {
+          if (mpvuePlatform == "wx") {
+            wx.showToast({
+              title: res.msg,
+              duration: 2000
+            });
+          } else {
+            swan.showToast({
+              title: res.msg,
+              duration: 2000
+            });
+          }
+          this.formData.custName = "";
+          this.formData.custPhone = "";
+        }
+      });
+    }
+  }
+};
+</script>
+
+<style lang="less">
+.common_fangan {
+  margin-top: 74rpx;
+  margin-bottom: 74rpx;
+  background: linear-gradient(
+    68deg,
+    rgba(0, 28, 164, 0.75),
+    rgba(26, 121, 181, 0.75)
+  );
+  box-shadow: 0px 5px 10px 0px rgba(93, 173, 218, 0.82);
+  border-radius: 10rpx;
+  padding: 30rpx 56rpx;
+  .two {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    height: 80rpx;
+    padding-left: 20rpx;
+    margin-bottom: 20rpx;
+    img {
+      width: 24rpx;
+      height: 24rpx;
+    }
+  }
+  picker {
+    width: 53%;
+    height: 80rpx;
+    text-align: center;
+    line-height: 80rpx;
+  }
+  .one {
+    display: flex;
+    align-items: center;
+    width: 70%;
+    background: #fff;
+    height: 80rpx;
+    font-size: 14px;
+    padding-left: 20rpx;
+    margin-bottom: 20rpx;
+    position: relative;
+    .one_left {
+      display: flex;
+      align-items: center;
+      img {
+        width: 24rpx;
+        height: 24rpx;
+        margin-right: 20rpx;
+      }
+    }
+    .select_img {
+      position: relative;
+      right: 0%;
+      width: 16rpx;
+      height: 16rpx;
+    }
+  }
+  input {
+    padding: 7px;
+    border: none;
+    background: transparent;
+    font-size: 12px;
+  }
+  .button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .button1 {
+      border: none;
+      width: 340rpx;
+      text-align: center;
+      height: 60rpx;
+      line-height: 60rpx;
+      background: rgba(0, 134, 255, 1);
+      opacity: 0.65;
+      border-radius: 4rpx;
+      font-size: 14px;
+      font-family: MicrosoftYaHei-Bold;
+      font-weight: bold;
+      color: rgba(255, 255, 255, 1);
+    }
+  }
+}
+</style>

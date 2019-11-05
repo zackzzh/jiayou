@@ -1,0 +1,353 @@
+<template>
+<div>
+  <jy-header></jy-header>
+  <div class="jy_web_div">
+    <jy-banner bannerUrl="/static/images/web/banner.png"/>
+    <jy-data></jy-data>
+    <div v-for="(item,index) in moduleList" :key="index">
+      <!-- <jy-title :title="item.title" :subtitle="item.subtitle"></jy-title> -->
+      <div class="jy_title">
+        <div>{{item.title}}</div>
+        <div class="samll">{{item.subtitle}}</div>
+      </div>
+      <!-- 网站建设 -->
+      <div v-if="item.elType === 'website'">
+        <div class="web_website_div">
+          <image  class="web_website_bgImg" mode="widthFix" src="/static/images/web/webbg.png"></image>
+          <div class="web_website_content">
+            <div class="web_website_row">
+                <image  class="web_website_img" mode="widthFix" src="/static/images/web/web1.png"></image>
+                <div class="web_website_right">
+                  <div>1.公司品牌实力如何更好的向公众展现？</div>
+                  <div>2.如何扩大公司品牌知名度？</div>
+                  <div>3.如何提升网站访问转化率？</div>
+                </div>
+            </div>
+            <div class="web_website_btn" @click="goBottom">免费获取解决方案</div>
+          </div>
+        </div>
+      </div>
+      <!-- 共同选择 -->
+      <!-- <jy-navs v-if="item.elType === 'choose'" :data="item.list" :number="4"></jy-navs> -->
+      
+      <div class="jy_navs" v-if="item.elType === 'choose'">
+        <div
+          class="item"
+          v-for="(itemNav, indexNav) in item.list"
+          :key="indexNav"
+          :style="{ 'width': (100/4) + '%' }"
+        >
+          <img :src="itemNav.img" :style="{ 'width':itemNav.width + 'rpx', 'height': itemNav.height + 'rpx' }">
+          <div class="small">{{itemNav.label}}</div>
+        </div>
+      </div>
+      <!-- 定制服务 -->
+      <div v-if="item.elType === 'custom'">
+          <div class="web_custom_col" span="12" v-for="(itemC,indexC) in item.list" :key="indexC">
+            <div class="web_custom_div">
+              <image  class="web_custom_img" mode="widthFix" :src="itemC.img"></image>
+              <div class="web_custom_title">{{itemC.title}}</div>
+            </div>
+          </div>
+      </div>
+      <!-- 服务流程 -->
+      <div v-if="item.elType === 'flow'">
+        <image  class="web_flow_img" mode="widthFix" src="/static/images/web/process.png"></image>
+        <div class="web_flow_input_div">
+          <input class="web_flow_input" type="text" placeholder="咨询热线：020-81807466" />
+          <button class="web_flow_btn" type="info" open-type="contact">立即咨询</button>
+        </div>  
+      </div>
+      <!-- 建站优势 -->
+      <!-- <jy-ad v-if="item.elType === 'advantage'" :data="item.list"></jy-ad> -->
+      <div v-if="item.elType === 'advantage'" class="jy_td">
+        <div class="jy_td_item" v-for="(itemAd, indexAd) in item.list" :key="indexAd">
+          <img :src="itemAd.img" alt class="jy_td_img">
+          <div class="jy_td_content">
+            <div>{{itemAd.title}}</div>
+            <div class="jy_td_small">{{itemAd.subtitle}}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 案例 -->
+    <!-- <jy-cases :data="casesList"/> -->
+    <div class="jy_cases_div">
+      <div v-if="casesList.length > 0">
+        <div
+          class="jy_case_card_div"
+          v-for="(item, index) in casesList"
+          :key="index"
+          @click="toDetail(item)"
+        >
+          <!-- <jy-case-card :data="item"/> -->
+            <div class="jy_cases_card">
+              <image class="jy_cases_img" mode="widthFix" :src="item.picUrl"></image>
+              <div class="jy_cases_title">{{item.title}}</div>
+              <div class="jy_cases_subtitle">{{item.subtitle}}</div>
+            </div>
+        </div>
+      </div>
+    </div>
+    <jy-form :index="1"></jy-form>
+  </div>
+  <jy-footer></jy-footer>
+</div>
+</template>
+
+<script>
+import jyBanner from "@/components/jy_banner";
+// import jyCases from "@/components/jy_cases";
+// import jyCaseCard from "@/components/jy_case_card";
+import jyData from "@/components/jy_data.vue";
+// import jyTitle from "@/components/jy_title.vue";
+import jyNavs from "@/components/jy_navs.vue";
+// import jyAd from "@/components/jy_ad.vue";
+import jyForm from "@/components/jy_form.vue";
+import jyHeader from '@/components/jy_header.vue'
+import jyFooter from '@/components/jy_footer.vue'
+import moduleList from "./webData";
+import utils from "@/utils/index";
+
+export default {
+  components: {
+    jyBanner,
+    // jyCases,
+    // jyCaseCard,
+    jyData,
+    // jyTitle,
+    jyNavs,
+    // jyAd,
+    jyForm,
+    jyHeader,
+    jyFooter
+  },
+  props: ["data"],
+  data() {
+    return {
+      moduleList,
+      bannerUrl: "/static/images/web/banner.png",
+      casesList: []
+    };
+  },
+  methods: {
+    goBottom() {
+      utils.toBottom();
+    },
+    toDetail(val) {
+      if (mpvuePlatform === "wx") {
+        wx.navigateTo({
+          url: "/pages/cases_detail/main?id=" + val.id
+        });
+      } else if (mpvuePlatform === "swan") {
+        swan.navigateTo({
+          url: "/pages/cases_detail/main?id=" + val.id
+        });
+      }
+    }
+  },
+  created() {
+    this.$api.cases({ typeId: 8 }).then(res => {
+      if (res.code === 200) {
+        this.casesList = res.page.list;
+      }
+    });
+    // console.log("classic case".toUpperCase());
+  }
+};
+</script>
+
+<style lang="less">
+.jy_web_div {
+   padding:105rpx 20rpx;
+  .jy_title {
+    text-align: center;
+    width: 100%;
+    color: #002787;
+    font-size: 36rpx;
+    margin-bottom: 48rpx;
+    margin-top: 74rpx;
+    font-weight: bold;
+
+    .samll {
+      font-size: 28rpx;
+      margin-top: 20rpx;
+    }
+  } 
+  .jy_td {
+    .jy_td_item {
+      position: relative;
+      margin-bottom: 30rpx;
+      .jy_td_img {
+        width: 100%;
+        position: relative;
+        z-index: 1;
+        height: 174rpx;
+      }
+    }
+    .jy_td_content {
+      color: #002787;
+      position: absolute;
+      font-size: 38rpx;
+      z-index: 2;
+      left: 30%;
+      width: 70%;
+      top: 50%;
+      transform: translateY(-50%);
+
+      .jy_td_small {
+        margin-top: 20rpx;
+        font-size: 24rpx;
+        padding-right: 10rpx;
+      }
+    }
+  }
+  .jy_navs {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    .item {
+      color: #515151;
+      text-align: center;
+      margin-bottom: 40rpx;
+      img {
+        margin-bottom: 15rpx;
+      }
+      .small {
+        font-size: 24rpx;
+      }
+    }
+  }
+  .jy_cases_div {
+    margin: 10rpx 0;
+    white-space: nowrap;
+    overflow-x: auto;
+    .jy_case_card_div {
+      width: 42%;
+      display: inline-block;
+      margin: 18rpx 10rpx;
+      .jy_cases_card {
+        width: 100%;
+        border-radius: 0 0 10rpx 10rpx;
+        background: #303030;
+        box-shadow: 0 4rpx 20rpx 0 rgba(51, 51, 51, 0.43);
+        border-radius: 12rpx;
+        text-align: center;
+
+        .jy_cases_img {
+          width: 100%;
+          border-radius: 12rpx 12rpx 0 0;
+        }
+
+        .jy_cases_title {
+          overflow: hidden;
+          padding: 14rpx 0 8rpx 0;
+          color: #f6f6f6;
+          font-size: 24rpx;
+          font-weight: bold;
+        }
+
+        .jy_cases_subtitle {
+          padding: 0 0 10rpx 0;
+          color: #8a8a8a;
+          font-size: 20rpx;
+        }
+      }
+    }
+  }
+  .web_website_bgImg {
+    width: 100%;
+  }
+  .web_website_div {
+    position: relative;
+    text-align: center;
+    .web_website_content {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      right: 0;
+      left: 0;
+      width: 94%;
+      height: 78%;
+      margin: auto;
+     .web_website_row{ 
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       .web_website_img {
+          width: 64%;
+        }
+        .web_website_right {
+          text-align: left;
+          padding-left: 20rpx;
+          div {
+            margin: 26rpx 0;
+            color: rgba(51, 51, 51, 0.85);
+            font-size: 22rpx;
+            font-weight: 600;
+            text-shadow: 0 2rpx 4rpx rgba(0, 0, 0, 0.48);
+          }
+        }
+      }
+      .web_website_btn {
+        cursor: pointer;
+        width: 240rpx;
+        margin: auto;
+        padding: 16rpx 0;
+        text-align: center;
+        background: rgba(68, 81, 104, 1);
+        border-radius: 10rpx;
+        font-size: 24rpx;
+        font-weight: 500;
+        color: rgba(174, 190, 216, 1);
+      }
+    }
+  }
+  .web_custom_col{
+    width: 50%;
+    display: inline-block;
+    .web_custom_div {
+      margin: 8rpx 14rpx;
+      border-radius: 10rpx;
+      background: #303030;
+      text-align: center;
+      .web_custom_img {
+        width: 100%;
+      }
+      .web_custom_title {
+        width: 100%;
+        padding: 4rpx 0 16rpx 0;
+        color: rgba(243, 245, 245, 1);
+        font-size: 28rpx;
+        font-weight: bold;
+      }
+    }
+  }
+  .web_flow_img {
+    width: 100%;
+  }
+  .web_flow_input_div{
+    width: 76%;
+    margin: 40rpx auto 0 auto;
+    border-radius: 26rpx;
+    display: flex;
+    justify-content: space-between;
+    border: 1rpx solid rgba(5, 1, 1, 0.25);
+    box-shadow: 0 2rpx 12rpx 0 rgba(5, 1, 1, 0.25);
+    .web_flow_input{
+      width: 60%;
+      margin: auto 0 auto 20rpx;
+      font-size: 24rpx;
+    }
+    .web_flow_btn{
+      margin: 0;
+      border-radius: 0 26rpx 26rpx 0;
+      background: rgba(61, 132, 234, 0.85);
+      color: #002787;
+      font-size: 32rpx;
+      font-weight: 600;
+    }
+  }
+}
+</style>

@@ -1,0 +1,16 @@
+{
+  "pages": [
+    "pages/index/main",
+    "pages/applet/main",
+    "pages/app_p/main",
+    "pages/web_design/main",
+    "pages/cases_detail/main",
+    "pages/official_accounts/main"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "",
+    "navigationBarTextStyle": "black"
+  }
+}

@@ -1,0 +1,60 @@
+<template>
+  <div class="jy_cases_div">
+    <div v-if="data.length > 0">
+      <div
+        class="jy_case_card_div"
+        v-for="(item, index) in data"
+        :key="index"
+        @click="toDetail(item)"
+      >
+        <jy-case-card :data="item"/>
+      </div>
+    </div>
+    <!-- <div class="jy_case_card_div">
+      <jy-case-card :data="casesData"/>
+    </div>
+    <div class="jy_case_card_div">
+      <jy-case-card :data="casesData"/>
+    </div>
+    <div class="jy_case_card_div">
+      <jy-case-card :data="casesData"/>
+    </div>-->
+  </div>
+</template>
+
+<script>
+import jyCaseCard from "@/components/jy_case_card";
+
+export default {
+  components: {
+    jyCaseCard
+  },
+  props: ["data"],
+  methods: {
+    toDetail(val) {
+      if (mpvuePlatform === "wx") {
+        wx.navigateTo({
+          url: "/pages/cases_detail/main?id=" + val.id
+        });
+      } else if (mpvuePlatform === "swan") {
+        swan.navigateTo({
+          url: "/pages/cases_detail/main?id=" + val.id
+        });
+      }
+    }
+  }
+};
+</script>
+
+<style scoped lang="less">
+.jy_cases_div {
+  margin: 10rpx 0;
+  white-space: nowrap;
+  overflow-x: auto;
+  .jy_case_card_div {
+    width: 42%;
+    display: inline-block;
+    margin: 18rpx 10rpx;
+  }
+}
+</style>

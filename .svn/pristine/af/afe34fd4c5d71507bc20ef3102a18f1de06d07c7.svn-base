@@ -1,0 +1,107 @@
+<template>
+  <div class="common_footer">
+    <a class="footer_item" @click="toHome">
+      <img src="/static/images/f1.png" alt class="img_one">
+      <div>首页</div>
+    </a>
+    <button
+      open-type="contact"
+      href="https://p.qiao.baidu.com/cps/chat?siteId=13267969&userId=27524150"
+      class="footer_item"
+      plain="true"
+    >
+      <img src="/static/images/f2.png" alt class="img_two">
+      <div>联系客服</div>
+    </button>
+    <a class="footer_item" @click="phone('020-81807466')">
+      <img src="/static/images/f3.png" alt class="img_three">
+      <div>联系电话</div>
+    </a>
+  </div>
+</template>
+
+<script>
+export default {
+  methods: {
+    toHome() {
+      console.log("mpvuePlatform", mpvuePlatform);
+      if (mpvuePlatform == "wx") {
+        wx.reLaunch({
+          url: "/pages/index/main"
+        });
+      } else {
+        swan.reLaunch({
+          url: "/pages/index/main"
+        });
+      }
+    },
+    phone(phone) {
+      if (mpvuePlatform == "wx") {
+        wx.makePhoneCall({
+          phoneNumber: phone,
+          success: res => {}
+        });
+      } else {
+        swan.makePhoneCall({
+          phoneNumber: phone,
+          success: res => {}
+        });
+      }
+    }
+  }
+};
+</script>
+
+<style lang="less">
+.common_footer {
+  position: fixed;
+  z-index: 100;
+  bottom: 0;
+  width: 100%;
+  height: 120rpx;
+  background: linear-gradient(
+    -83deg,
+    rgba(207, 217, 223, 1),
+    rgba(226, 235, 240, 1)
+  );
+  box-shadow: 0px 8px 21px 0px rgba(0, 28, 20, 0.17);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  a {
+    color: #000000;
+    font-size: 24rpx;
+    margin-top: 10rpx;
+  }
+  button {
+    line-height: 1.2;
+    border: none;
+    background: transparent;
+    padding: 0;
+    color: #000000;
+    font-size: 24rpx;
+    margin-top: 10rpx;
+  }
+  .footer_item {
+    flex: 1 33.3%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    .img_one {
+      width: 50rpx;
+      height: 50rpx;
+    }
+
+    .img_two {
+      width: 50rpx;
+      height: 50rpx;
+    }
+
+    .img_three {
+      width: 50rpx;
+      height: 50rpx;
+    }
+  }
+}
+</style>

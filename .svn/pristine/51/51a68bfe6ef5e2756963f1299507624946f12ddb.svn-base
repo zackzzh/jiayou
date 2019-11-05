@@ -1,0 +1,346 @@
+<template>
+  <div v-if="moduleList && moduleList.list">
+    <jy-header></jy-header>
+    <div class="jy_index_div">
+    <jy-banner bannerUrl="/static/images/index/banner.png"/>
+    <jy-data></jy-data>
+    <jy-title :title="moduleList.service.title" :subtitle="moduleList.service.subtitle"></jy-title>
+    <!-- <jy-navs :data="moduleList.service.navs" :number="4"></jy-navs> -->
+    
+    <div class="jy_navs" v-if="moduleList.service.navs.length>0">
+      <div
+        class="item"
+        v-for="(item, index) in moduleList.service.navs"
+        :key="index"
+        :style="{ 'width': (100/4) + '%' }"
+        @click.stop="toNext(item)"
+      >
+        <img :src="item.img" :style="{ 'width':item.width + 'rpx', 'height': item.height + 'rpx' }">
+        <div class="small">{{item.label}}</div>
+      </div>
+    </div>
+    <div v-for="(item,index) in moduleList.list" :key="index">
+      <!-- <jy-title :title="item.title" :subtitle="item.subtitle"></jy-title> -->
+      <div class="jy_title">
+        <div>{{item.title}}</div>
+        <div class="samll">{{item.subtitle}}</div>
+      </div>
+      <!-- 图标 -->
+      <!-- <jy-navs v-if="item.elType === 'navs'" :data="item.navs" :number="4"></jy-navs> -->
+      
+      <div class="jy_navs" v-if="item.elType === 'navs'">
+        <div
+          class="item"
+          v-for="(itemNav, indexNav) in item.navs"
+          :key="indexNav"
+          :style="{ 'width': (100/4) + '%' }"
+        >
+          <img :src="itemNav.img" :style="{ 'width':itemNav.width + 'rpx', 'height': itemNav.height + 'rpx' }">
+          <div class="small">{{itemNav.label}}</div>
+        </div>
+      </div>
+      <div v-if="item.hasBtn === 'hasBtn'" class="index_more_industry">
+        <a href="http://p.qiao.baidu.com/cps/chat?siteId=13267969&userId=27524150">咨询更多行业</a>
+      </div>
+      <!-- 五大服务流程 -->
+      <div v-if="item.elType === 'server'" style="padding: 0 20rpx">
+        <div class="index_server_row">
+          <div class="index_server_col" v-for="(itemS1,indexS1) in item.list1" :key="indexS1">
+            <div class="index_server_div">
+              <image  class="index_server_img" mode="aspectFit" :src="itemS1.img"></image>
+              <div class="index_server_title">{{itemS1.title}}</div>
+              <div class="index_server_subtitle">{{itemS1.subtitle}}</div>
+            </div>
+          </div>
+        </div>
+        <div class="index_serverJt_div">
+          <div class="index_serverJt_row">
+              <image  class="index_serverJt_img" mode="widthFix" src="/static/images/index/jt1.png"></image>
+              <image  class="index_serverJt_img" mode="widthFix" src="/static/images/index/jt2.png"></image>
+              <image  class="index_serverJt_img" mode="widthFix" src="/static/images/index/jt3.png"></image>
+              <image  class="index_serverJt_img" mode="widthFix" src="/static/images/index/jt4.png"></image>
+          </div>
+        </div>
+        <div class="index_server_row">
+          <div class="index_server_col" v-for="(itemS,indexS) in item.list2" :key="indexS">
+            <div class="index_server_div">
+              <image class="index_server_img" mode="aspectFit" :src="itemS.img"></image>
+              <div class="index_server_title">{{itemS.title}}</div>
+              <div class="index_server_subtitle">{{itemS.subtitle}}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- 选择甲由 -->
+      <div v-if="item.elType === 'choose'">
+          <div class="index_choose_col" v-for="(itemC,indexC) in item.list" :key="indexC">
+            <div class="index_choose_div">
+              <image  class="index_choose_img" mode="widthFix" :src="itemC.img"></image>
+              <div class="index_choose_title">{{itemC.title}}</div>
+            </div>
+        </div>
+      </div>
+    </div>
+    <!-- 案例 -->
+    <div style="margin-top: 30rpx" v-if="casesList.length > 0">
+        <div class="jy_case_col" v-for="(item,index) in casesList" :key="index">
+          <div class="jy_case_card_index" @click.stop="toDetail(item)">
+            <!-- <jy-case-card :data="item"/> -->
+            <div class="jy_cases_card">
+              <image class="jy_cases_img" mode="widthFix" :src="item.picUrl"></image>
+              <div class="jy_cases_title">{{item.title}}</div>
+              <div class="jy_cases_subtitle">{{item.subtitle}}</div>
+            </div>
+          </div>
+        </div>
+    </div>
+    <jy-form :index="1"></jy-form>
+  </div>
+    <jy-footer></jy-footer>
+</div>
+
+</template>
+
+<script>
+import jyBanner from "@/components/jy_banner";
+import jyCases from "@/components/jy_cases";
+import jyCaseCard from "@/components/jy_case_card";
+import jyData from "@/components/jy_data.vue";
+import jyTitle from "@/components/jy_title.vue";
+import jyNavs from "@/components/jy_navs.vue";
+import jyForm from "@/components/jy_form.vue";
+import jyHeader from '@/components/jy_header.vue'
+import jyFooter from '@/components/jy_footer.vue'
+import moduleList from "./indexData";
+
+export default {
+  components: {
+    jyBanner,
+    jyCases,
+    jyCaseCard,
+    jyData,
+    jyTitle,
+    jyNavs,
+    jyForm,
+    jyHeader,
+    jyFooter
+  },
+  data() {
+    return {
+      bannerUrl: "/static/images/index/banner.png",
+      casesList: [],
+      navs: [],
+      moduleList
+    };
+  },
+  // computed: {
+  //   listFun(){
+  //     let casesListFun = []
+  //     this.$api
+  //       .cases({
+  //         page: 1,
+  //         limit: 4
+  //       })
+  //       .then(res => {
+  //         if (res.code === 200) {
+  //           casesListFun = res.page.list;
+  //           // this.setData({casesList: res.page.list})
+  //         }
+  //       });
+  //       return casesListFun
+  //   }
+  // },
+  methods: {
+    toDetail(val) {
+      // console.log("toDetail", val, mpvuePlatform);
+      if (mpvuePlatform === "wx") {
+        wx.navigateTo({
+          url: "/pages/cases_detail/main?id=" + val.id
+        });
+      }else if(mpvuePlatform === "swan"){
+        swan.navigateTo({
+          url: "/pages/cases_detail/main?id=" + val.id
+        });
+      }
+    },
+    toNext(item) {
+      // console.log("item", item);
+      if (item.url) {
+        if (mpvuePlatform === "wx") {
+          wx.navigateTo({
+            url: item.url
+          });
+        } else {
+          swan.navigateTo({
+            url: item.url
+          });
+        }
+      }
+    }
+  },
+  mounted() {
+    this.$api
+      .cases({
+        page: 1,
+        limit: 4
+      })
+      .then(res => {
+        if (res.code === 200) {
+          this.casesList = res.page.list;
+          // this.setData({casesList: res.page.list})
+        }
+      });
+  }
+};
+</script>
+
+<style scoped lang="less">
+.jy_index_div {
+ padding:105rpx 20rpx;
+  
+  .jy_title {
+    text-align: center;
+    width: 100%;
+    color: #002787;
+    font-size: 36rpx;
+    margin-bottom: 48rpx;
+    margin-top: 74rpx;
+    font-weight: bold;
+
+    .samll {
+      font-size: 28rpx;
+      margin-top: 20rpx;
+    }
+  }
+  .jy_navs {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    .item {
+      color: #515151;
+      text-align: center;
+      margin-bottom: 40rpx;
+      img {
+        margin-bottom: 15rpx;
+      }
+      .small {
+        font-size: 24rpx;
+      }
+    }
+  }
+  .index_more_industry {
+    cursor: pointer;
+    text-align: center;
+    width: 220rpx;
+    margin: auto;
+    padding: 20rpx 0;
+    background: #99c4e9;
+    box-shadow: 0 6rpx 12rpx 0 rgba(42, 75, 198, 0.6);
+    border-radius: 32rpx;
+    font-size: 22rpx;
+    letter-spacing: 3rpx;
+
+    a {
+      color: #333;
+    }
+  }
+  .jy_case_col{
+    display: inline-block;
+    width: 50%;
+    .jy_case_card_index {
+      margin: 10rpx;
+      .jy_cases_card {
+        width: 100%;
+        border-radius: 0 0 10rpx 10rpx;
+        background: #303030;
+        box-shadow: 0 4rpx 20rpx 0 rgba(51, 51, 51, 0.43);
+        border-radius: 12rpx;
+        text-align: center;
+
+        .jy_cases_img {
+          width: 100%;
+          border-radius: 12rpx 12rpx 0 0;
+        }
+
+        .jy_cases_title {
+          overflow: hidden;
+          padding: 14rpx 0 8rpx 0;
+          color: #f6f6f6;
+          font-size: 24rpx;
+          font-weight: bold;
+        }
+
+        .jy_cases_subtitle {
+          padding: 0 0 10rpx 0;
+          color: #8a8a8a;
+          font-size: 20rpx;
+        }
+      }
+    }
+  }
+  .index_server_row{
+    display: flex;
+    justify-content: center;
+    .index_server_col{
+      padding: 0 20rpx;
+      margin: 0 30rpx;
+      .index_server_div{
+        width: 100%;
+        padding: 0 20rpx;
+        border-radius: 10rpx;
+        color: #002787;
+        font-weight: bold;
+        text-align: center;
+        background: linear-gradient(-83deg, rgba(161, 196, 253, 1), rgba(84, 177, 237, 1));
+        box-shadow: 0 5rpx 10rpx 0 rgba(93, 173, 218, 0.82);
+        .index_server_img{
+          width: 80rpx;
+          height: 80rpx;
+          // width: auto;
+          margin: 20rpx 0 6rpx 0;
+        }
+        .index_server_title {
+          font-size: 22rpx;
+        }
+        .index_server_subtitle {
+          padding: 4rpx 0 12rpx 0;
+          font-size: 26rpx;
+        }
+      }
+    }
+  }
+  .index_serverJt_div{
+    margin: 20rpx 0 10rpx 0;
+    .index_serverJt_row{
+      display: flex;
+      justify-content: center;
+      .index_serverJt_img{
+        width: 90rpx;
+        margin: 14rpx;
+      }
+    }
+  }
+  .index_choose_col{
+    display: inline-block;
+    width: 50%;
+    // padding: 0 20rpx;
+    .index_choose_div {
+      margin: 6rpx;
+      border-radius: 10rpx;
+      background: #303030;
+      text-align: center;
+      .index_choose_img {
+        width: 100%;
+      }
+      .index_choose_title {
+        width: 100%;
+        padding: 18rpx 0;
+        color: rgba(243, 245, 245, 1);
+        font-size: 20rpx;
+        font-weight: bold;
+      }
+    }
+  }
+}
+</style>

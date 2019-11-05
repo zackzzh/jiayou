@@ -1,0 +1,74 @@
+<template>
+  <div class="header">
+    <img src="/static/images/cbg.png" alt class="bg">
+    <div class="common_header">
+      <div class="logo">
+        <img src="/static/images/logo.png" alt>
+      </div>
+      <div class="home" @click="toHome">
+        <img src="/static/images/h1.png" alt>
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+export default {
+  methods: {
+    toHome() {
+      console.log("mpvuePlatform", mpvuePlatform);
+      if (mpvuePlatform == "wx") {
+        wx.reLaunch({
+          url: "/pages/index/main"
+        });
+      } else {
+        swan.reLaunch({
+          url: "/pages/index/main"
+        });
+      }
+    }
+  }
+};
+</script>
+<style lang="less">
+.header {
+  position: fixed;
+  height: 88rpx;
+  top: 0;
+  z-index: 3;
+  width: 100%;
+  .bg {
+    position: absolute;
+    height: 88rpx;
+    z-index: 4;
+    width: 100%;
+  }
+  .common_header {
+    position: absolute;
+    z-index: 5;
+    display: flex;
+    height: 88rpx;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    .logo {
+      img {
+        margin-top: 20rpx;
+        width: 160rpx;
+        height: 58rpx;
+      }
+    }
+
+    .home {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      right: 30rpx;
+      img {
+        margin-top: 12rpx;
+        width: 44rpx;
+        height: 44rpx;
+      }
+    }
+  }
+}
+</style>
